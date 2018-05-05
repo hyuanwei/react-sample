@@ -29,9 +29,6 @@ class App extends Component {
 
   buildPractioners = (entry) => {
 
-    //console.log(entry);
-    let response = [];
-
     let practionerNames = [];
 
     practionerNames = entry.map(p => p.resource.name.map(n => 
@@ -44,23 +41,52 @@ class App extends Component {
     entry.map(p => 
       p.resource.extension.map(e => 
         fetch(this.baseUrl + e.valueReference.reference + '?_format=json').then(response => response.json())
-          .then((responseData) => {
+          .then((responseData) => 
+          {
             //console.log(responseData);
             let fullAddress = [];
             if (typeof responseData.address !== "undefined") {
               fullAddress = responseData.address.map(a => a.line.join(' ') + ' ' + a.city + ' ' +a.postalCode );
             }
+
+            let locationItem = {
+              name: responseData.name,
+              address: fullAddress[0]
+            }
+
             //console.log(fullAddress);
-            locations.push({name: responseData.name, address: fullAddress})
-          })
+            locations.push(locationItem);
+          }).catch(error => console.log(error))
       )
     )
 
     //build response model
+    return this.buildResponse(practionerNames, locations);
 
-    response.practionerNames = practionerNames;
-    response.practionerLocations = locations;
+  }
+
+  buildResponse = (practionerNames, locations) => {
     
+    let response = []; 
+    
+    //run async
+    setTimeout(function () {
+      practionerNames.forEach((element,index) => {
+
+        let responseItem = {
+          practionerName: '',
+          locationName: '',
+          locationAddress: ''
+        };
+  
+        responseItem.practionerName = element[0];
+        responseItem.locationName = locations[0].name;
+        responseItem.locationAddress = locations[0].address;
+
+        response.push(responseItem);
+      });
+    }, 1);
+
     //console.log(response);
 
     return response;
@@ -76,11 +102,7 @@ class App extends Component {
         <div className="App-container">
           <h3>FHIR Find practioners</h3>
           <SearchBar handleSubmit={this.handleSearch} />
-          <PractionerList practionerInfo={this.state.practioners}/>
-
-          <pre>{JSON.stringify(this.state.practioners.practionerNames)}</pre>
-          <pre>{JSON.stringify(this.state.practioners.practionerLocations)}</pre>
-
+          <PractionerList practioners={this.state.practioners}/>
         </div>
       </div>
     );
@@ -122,8 +144,10 @@ class PractionerList extends React.Component {
 
   render(){
 
-    console.log(this.props.practionerInfo.practionerNames);
-    console.log(this.props.practionerInfo.practionerLocations);
+    //run async
+    setTimeout(function () {
+      console.log(this.props.practioners);
+    }, 1);
 
     var rows = [];
 
@@ -138,7 +162,7 @@ class PractionerList extends React.Component {
 }
 
 PractionerList.defaultProps = {
-  practionerInfo: {},
+  practioners: [],
 };
 
 
