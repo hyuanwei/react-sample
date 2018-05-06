@@ -61,6 +61,9 @@ class App extends Component {
     )
 
     //build response model
+    console.log(practionerNames);
+    console.log(locations);
+    
     return this.buildResponse(practionerNames, locations);
 
   }
@@ -70,22 +73,22 @@ class App extends Component {
     let response = []; 
     
     //run async
-    setTimeout(function () {
-      practionerNames.forEach((element,index) => {
+    // setTimeout(function () {
+    //   practionerNames.forEach((element,index) => {
 
-        let responseItem = {
-          practionerName: '',
-          locationName: '',
-          locationAddress: ''
-        };
+    //     let responseItem = {
+    //       practionerName: '',
+    //       locationName: '',
+    //       locationAddress: ''
+    //     };
   
-        responseItem.practionerName = element[0];
-        responseItem.locationName = locations[0].name;
-        responseItem.locationAddress = locations[0].address;
+    //     responseItem.practionerName = element[0];
+    //     responseItem.locationName = locations[0].name;
+    //     responseItem.locationAddress = locations[0].address;
 
-        response.push(responseItem);
-      });
-    }, 1);
+    //     response.push(responseItem);
+    //   });
+    // }, 1);
 
     //console.log(response);
 
@@ -146,7 +149,7 @@ class PractionerList extends React.Component {
 
     //run async
     setTimeout(function () {
-      console.log(this.props.practioners);
+      //console.log(this.props.practioners);
     }, 1);
 
     var rows = [];
